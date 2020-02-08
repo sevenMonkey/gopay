@@ -5,9 +5,9 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"github.com/milkbobo/gopay/client"
-	"github.com/milkbobo/gopay/common"
-	"github.com/milkbobo/gopay/constant"
+	"github.com/sevenMonkey/gopay/client"
+	"github.com/sevenMonkey/gopay/common"
+	"github.com/sevenMonkey/gopay/constant"
 	"net/http"
 	"testing"
 )

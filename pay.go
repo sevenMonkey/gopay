@@ -2,9 +2,9 @@ package gopay
 
 import (
 	"errors"
-	"github.com/milkbobo/gopay/client"
-	"github.com/milkbobo/gopay/common"
-	"github.com/milkbobo/gopay/constant"
+	"github.com/sevenMonkey/gopay/client"
+	"github.com/sevenMonkey/gopay/common"
+	"github.com/sevenMonkey/gopay/constant"
 )
 
 // 用户下单支付接口

@@ -10,7 +10,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/milkbobo/gopay/common"
+	"github.com/sevenMonkey/gopay/common"
 	"hash"
 	"net/url"
 	"sort"

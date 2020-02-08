@@ -9,9 +9,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/milkbobo/gopay/client"
-	"github.com/milkbobo/gopay/common"
-	"github.com/milkbobo/gopay/util"
+	"github.com/sevenMonkey/gopay/client"
+	"github.com/sevenMonkey/gopay/common"
+	"github.com/sevenMonkey/gopay/util"
 	"encoding/json"
 )
 
