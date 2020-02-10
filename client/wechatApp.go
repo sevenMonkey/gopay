@@ -39,7 +39,7 @@ func (this *WechatAppClient) Pay(charge *common.Charge) (map[string]string, erro
 	m["nonce_str"] = util.RandomStr()
 	m["body"] = TruncatedText(charge.Describe, 32)
 	m["out_trade_no"] = charge.TradeNum
-	m["total_fee"] = strconv.FormatInt(charge.MoneyFee, 64)
+	m["total_fee"] = strconv.FormatInt(charge.MoneyFee, 10)
 	m["spbill_create_ip"] = util.LocalIP()
 	m["notify_url"] = charge.CallbackURL
 	m["trade_type"] = "APP"

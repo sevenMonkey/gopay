@@ -41,7 +41,7 @@ func (this *AliPayClient) PayToClient(charge *common.Charge) (map[string]string,
 	m["sign_type"] = this.RSAType
 
 	bizContent["out_biz_no"] = charge.TradeNum
-	bizContent["amount"] =strconv.FormatInt(charge.MoneyFee, 64)
+	bizContent["amount"] =strconv.FormatInt(charge.MoneyFee, 10)
 	bizContent["payee_account"] = charge.AliAccount
 	bizContent["payee_type"] = charge.AliAccountType
 
