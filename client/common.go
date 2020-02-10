@@ -10,6 +10,7 @@ import (
 	"github.com/sevenMonkey/gopay/common"
 	"github.com/sevenMonkey/gopay/util"
 	"sort"
+	"strconv"
 	"strings"
 	"github.com/shopspring/decimal"
 )
@@ -22,7 +23,7 @@ func WachatCompanyChange(mchAppid, mchid, key string, conn *HTTPSClient, charge 
 	m["nonce_str"] = util.RandomStr()
 	m["partner_trade_no"] = charge.TradeNum
 	m["openid"] = charge.OpenID
-	m["amount"] = WechatMoneyFeeToString(charge.MoneyFee)
+	m["amount"] = strconv.FormatInt(charge.MoneyFee, 64)
 	m["spbill_create_ip"] = util.LocalIP()
 	m["desc"] = TruncatedText(charge.Describe, 32)
 
