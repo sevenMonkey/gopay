@@ -59,3 +59,7 @@ type WeChatQueryResult struct {
 	TradeState     string `xml:"trade_state" json:"trade_state,omitempty"`
 	TradeStateDesc string `xml:"trade_state_desc" json:"trade_state_desc,omitempty"`
 }
+
+type WeChatRefundResult struct {
+	WechatBaseResult
+}

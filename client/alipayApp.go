@@ -50,7 +50,7 @@ func (this *AliAppClient) Pay(charge *common.Charge) (map[string]string, error) 
 	}
 	m["biz_content"] = string(bizContentJson)
 
-	m["sign"] = this.GenSign(m)
+	m["sign"], err = this.GenSign(m)
 
 	return map[string]string{"orderString": this.ToURL(m)}, nil
 }
@@ -64,7 +64,7 @@ func (this *AliAppClient) CloseOrder(charge *common.Charge) (map[string]string, 
 //}
 
 // 订单查询
-func (this *AliAppClient) QueryOrder(outTradeNo string) (common.AliWebAppQueryResult, error) {
+func (this *AliAppClient) QueryOrder(outTradeNo string) (result common.AliWebAppQueryResult, err error) {
 	var m = make(map[string]string)
 	m["method"] = "alipay.trade.query"
 	m["app_id"] = this.AppID
@@ -79,11 +79,13 @@ func (this *AliAppClient) QueryOrder(outTradeNo string) (common.AliWebAppQueryRe
 		return common.AliWebAppQueryResult{}, errors.New("json.Marshal: " + err.Error())
 	}
 	m["biz_content"] = string(bizContentJson)
-	sign := this.GenSign(m)
+	sign, err := this.GenSign(m)
+	if err != nil{
+		return
+	}
 	m["sign"] = sign
 
 	url := fmt.Sprintf("%s?%s", "https://openapi.alipay.com/gateway.do", this.ToURL(m))
-
 	return GetAlipayApp(url)
 }
 

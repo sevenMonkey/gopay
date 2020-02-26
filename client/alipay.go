@@ -14,7 +14,6 @@ import (
 	"hash"
 	"net/url"
 	"sort"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -28,8 +27,8 @@ type AliPayClient struct {
 	RSAType string // RSA or RSA2
 }
 
-func (this *AliPayClient) PayToClient(charge *common.Charge) (map[string]string, error) {
-	var result = make(map[string]string)
+func (this *AliPayClient) PayToClient(charge *common.Charge) (result map[string]string, err error) {
+	result = make(map[string]string)
 	var m = make(map[string]string)
 	var bizContent = make(map[string]string)
 	m["app_id"] = this.AppID
@@ -41,7 +40,7 @@ func (this *AliPayClient) PayToClient(charge *common.Charge) (map[string]string,
 	m["sign_type"] = this.RSAType
 
 	bizContent["out_biz_no"] = charge.TradeNum
-	bizContent["amount"] =strconv.FormatInt(charge.MoneyFee, 10)
+	bizContent["amount"] = fmt.Sprintf("%f", float64(charge.MoneyFee)/100)
 	bizContent["payee_account"] = charge.AliAccount
 	bizContent["payee_type"] = charge.AliAccountType
 
@@ -53,8 +52,10 @@ func (this *AliPayClient) PayToClient(charge *common.Charge) (map[string]string,
 	}
 	m["biz_content"] = string(bizContentJson)
 
-	m["sign"] = this.GenSign(m)
-
+	m["sign"], err = this.GenSign(m)
+	if err != nil{
+		return
+	}
 	requestUrl := fmt.Sprintf("%s?%s", "https://openapi.alipay.com/gateway.do", this.ToURL(m))
 
 	var resp map[string]interface{}
@@ -72,11 +73,11 @@ func (this *AliPayClient) PayToClient(charge *common.Charge) (map[string]string,
 		return result, errors.New(fmt.Sprintf("返回结果错误:%s", resp))
 	}
 
-	return result, nil
+	return result, err
 }
 
 // GenSign 产生签名
-func (this *AliPayClient) GenSign(m map[string]string) string {
+func (this *AliPayClient) GenSign(m map[string]string) (sign string, err error) {
 	var data []string
 
 	for k, v := range m {
@@ -89,17 +90,17 @@ func (this *AliPayClient) GenSign(m map[string]string) string {
 
 	s := this.getHash(this.RSAType)
 
-	_, err := s.Write([]byte(signData))
+	_, err = s.Write([]byte(signData))
 	if err != nil {
-		panic(err)
+		return
 	}
 	hashByte := s.Sum(nil)
 	signByte, err := this.PrivateKey.Sign(rand.Reader, hashByte, crypto.SHA256)
 	if err != nil {
-		panic(err)
+		return
 	}
 
-	return base64.StdEncoding.EncodeToString(signByte)
+	return base64.StdEncoding.EncodeToString(signByte), nil
 }
 
 // CheckSign 检测签名

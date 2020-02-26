@@ -50,6 +50,8 @@ func WachatCompanyChange(mchAppid, mchid, key string, conn *HTTPSClient, charge 
 	return struct2Map(result)
 }
 
+
+
 // 微信关闭订单
 func WachatCloseOrder(appid, mchid, key string, outTradeNo string) (common.WeChatQueryResult, error) {
 	var m = make(map[string]string)
@@ -67,6 +69,34 @@ func WachatCloseOrder(appid, mchid, key string, outTradeNo string) (common.WeCha
 
 	// 转出xml结构
 	result, err := PostWechat("https://api.mch.weixin.qq.com/pay/closeorder", m, nil)
+	if err != nil {
+		return common.WeChatQueryResult{}, err
+	}
+
+	return result, err
+}
+
+func WechatRefundOrder(appid, mchid, key string, transactionId, refundId string, totalFee, refundFee int64, notifyUrl string) (common.WeChatQueryResult, error) {
+	var m = make(map[string]string)
+	m["appid"] = appid
+	m["mch_id"] = mchid
+	m["nonce_str"] = util.RandomStr()
+	m["transaction_id"] = transactionId
+	m["out_trade_no"] = transactionId
+	m["out_refund_no"] = refundId
+	m["total_fee"] = strconv.FormatInt(totalFee, 10)
+	m["refund_fee"] = strconv.FormatInt(refundFee, 10)
+	m["notify_url"] = notifyUrl
+	m["sign_type"] = "MD5"
+
+	sign, err := WechatGenSign(key, m)
+	if err != nil {
+		return common.WeChatQueryResult{}, err
+	}
+	m["sign"] = sign
+
+	// 转出xml结构
+	result, err := PostWechat("https://api.mch.weixin.qq.com/secapi/pay/refund", m, nil)
 	if err != nil {
 		return common.WeChatQueryResult{}, err
 	}
@@ -214,6 +244,10 @@ func GetAlipayApp(urls string) (common.AliWebAppQueryResult, error) {
 	}
 
 	return aliPay, nil
+}
+
+func AlipayRefundOrder()  {
+	
 }
 
 // ToURL

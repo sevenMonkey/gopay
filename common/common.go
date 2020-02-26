@@ -8,6 +8,10 @@ type PayClient interface {
 	PayToClient(charge *Charge) (map[string]string, error)
 }
 
+
+
+
+
 // Charge 支付参数
 type Charge struct {
 	APPID       string `json:"-"`
@@ -27,6 +31,7 @@ type Charge struct {
 	AliAccount     string `json:"ali_account"`
 	AliAccountType string `json:"ali_account_type"`
 }
+
 
 //PayCallback 支付返回
 type PayCallback struct {
